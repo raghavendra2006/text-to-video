@@ -159,11 +159,16 @@ def render_slide(data):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Missing scene config JSON argument")
+        print("Missing scene config JSON argument or file path")
         sys.exit(1)
         
     try:
-        input_data = json.loads(sys.argv[1])
+        arg = sys.argv[1]
+        if os.path.exists(arg) and arg.endswith('.json'):
+            with open(arg, 'r', encoding='utf-8') as f:
+                input_data = json.load(f)
+        else:
+            input_data = json.loads(arg)
         render_slide(input_data)
     except Exception as e:
         print(f"Error rendering slide: {e}")

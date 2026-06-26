@@ -375,20 +375,23 @@ pipelineRouter.get('/compile-stream/:id', async (req: Request, res: Response) =>
       sendEvent('VISUAL', percent + 2, `Drawing scene ${scene.sceneNum} infographic card...`);
       const imageName = `scene_${scene.id}.png`;
       const imagePath = path.join(tempDir, imageName);
+      const jsonPath = path.join(tempDir, `scene_${scene.id}.json`);
       
-      const renderPayload = JSON.stringify({
+      const renderPayload = {
         headline: scene.headline,
         narration: scene.narration,
         keywords: scene.keywords,
         sceneNum: scene.sceneNum,
         totalScenes: scenes.length,
         outputPath: imagePath
-      });
+      };
+
+      fs.writeFileSync(jsonPath, JSON.stringify(renderPayload, null, 2), 'utf-8');
 
       await new Promise<void>((resolve, reject) => {
         const pythonPath = path.resolve(__dirname, '../../../.venv/Scripts/python.exe');
         const scriptPath = path.resolve(__dirname, '../../../scripts/slide_renderer.py');
-        const proc = spawn(pythonPath, [scriptPath, renderPayload]);
+        const proc = spawn(pythonPath, [scriptPath, jsonPath]);
 
         let stderr = '';
         proc.stderr.on('data', (data) => {
