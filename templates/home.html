@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}PIB Press Release to Video AI - Convert Text to Localized Videos{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="hero-container fade-in">
+        <div class="badge-glow">
+            <span class="badge-text"><i class="fa-solid fa-sparkles"></i> AI-Powered Video Translation Platform</span>
+        </div>
+        <h1 class="hero-title">
+            Transform PIB Press Releases <br>
+            Into <span class="text-gradient">Multilingual Videos</span>
+        </h1>
+        <p class="hero-subtitle">
+            Instantly summarize and convert government press releases into highly-engaging video broadcasts with synchronized TTS audio in English and 13 Indian regional languages.
+        </p>
+        <div class="hero-actions">
+            {% if session.get('user_id') %}
+                <a href="{{ url_for('video_gen') }}" class="btn btn-primary btn-large glow-effect">
+                    <i class="fa-solid fa-play"></i> Enter Video Studio
+                </a>
+            {% else %}
+                <a href="{{ url_for('signup') }}" class="btn btn-primary btn-large glow-effect">
+                    Get Started Free <i class="fa-solid fa-arrow-right"></i>
+                </a>
+                <a href="{{ url_for('login') }}" class="btn btn-secondary btn-large">
+                    Sign In
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="section container">
+    <h2 class="section-title text-center">System Pipeline Flowchart</h2>
+    <p class="section-subtitle text-center">How our Generative AI & Video Synthesis Engine works</p>
+    
+    <div class="pipeline-flow">
+        <div class="flow-card input-step">
+            <div class="flow-icon"><i class="fa-solid fa-file-invoice"></i></div>
+            <h3>PIB Press Release</h3>
+            <p>Input raw English text articles</p>
+        </div>
+        
+        <div class="flow-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+        
+        <div class="flow-card nlp-step">
+            <div class="flow-icon"><i class="fa-solid fa-brain"></i></div>
+            <h3>NLP Engine</h3>
+            <p>Summarization & Keyword Extraction</p>
+        </div>
+        
+        <div class="flow-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+        
+        <div class="flow-branches">
+            <div class="flow-branch-row">
+                <div class="flow-card translation-step">
+                    <div class="flow-icon"><i class="fa-solid fa-language"></i></div>
+                    <h3>Bhashini / Gemini AI</h3>
+                    <p>Translate into 13 Regional Languages</p>
+                </div>
+                <div class="flow-arrow-mini"><i class="fa-solid fa-chevron-right"></i></div>
+                <div class="flow-card audio-step">
+                    <div class="flow-icon"><i class="fa-solid fa-volume-high"></i></div>
+                    <h3>Audio Engine</h3>
+                    <p>Regional Text-to-Speech (TTS)</p>
+                </div>
+            </div>
+            
+            <div class="flow-branch-connector">
+                <div class="line"></div>
+                <div class="label">PARALLEL PIPELINE</div>
+            </div>
+            
+            <div class="flow-branch-row">
+                <div class="flow-card asset-step">
+                    <div class="flow-icon"><i class="fa-solid fa-photo-film"></i></div>
+                    <h3>Media Asset Engine</h3>
+                    <p>Generate high-quality infographic slides</p>
+                </div>
+                <div class="flow-arrow-mini"><i class="fa-solid fa-chevron-right"></i></div>
+                <div class="flow-card synthesis-step">
+                    <div class="flow-icon"><i class="fa-solid fa-clapperboard"></i></div>
+                    <h3>Video Engine</h3>
+                    <p>Stitch frames & align audio</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flow-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+        
+        <div class="flow-card output-step">
+            <div class="flow-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <h3>Final Output</h3>
+            <p>Synchronized Multilingual Video (.mp4)</p>
+        </div>
+    </div>
+</section>
+
+<section class="section section-alt">
+    <div class="container">
+        <h2 class="section-title text-center">Core Features</h2>
+        <p class="section-subtitle text-center">Innovative modules built for government communication scale</p>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon bg-indigo"><i class="fa-solid fa-compress"></i></div>
+                <h3>AI Text Summarization</h3>
+                <p>Leverages large language models to distill verbose press statements into structural video scripts, dividing the news into 3-5 visual scenes.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon bg-cyan"><i class="fa-solid fa-language"></i></div>
+                <h3>13 Regional Languages</h3>
+                <p>Supports Hindi, Tamil, Telugu, Bengali, Kannada, Marathi, Urdu, Gujarati, Malayalam, Odia, Punjabi, Assamese, and Sanskrit with accurate translations.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon bg-purple"><i class="fa-solid fa-microphone-lines"></i></div>
+                <h3>Neural Text-to-Speech</h3>
+                <p>Generates high-fidelity spoken tracks matching the regional dialect, complete with natural pacing and rhythm synchronization.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon bg-pink"><i class="fa-solid fa-film"></i></div>
+                <h3>Dynamic Infographic Slides</h3>
+                <p>Produces beautiful animated scenes, displaying headlines, background gradients, custom bullet points, and subtitles directly in the video frame.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

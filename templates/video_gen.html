@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+
+{% block title %}Video Studio - PIB Press Release to Video AI{% endblock %}
+
+{% block content %}
+<div class="studio-container">
+    <div class="studio-header">
+        <h1 class="studio-title"><i class="fa-solid fa-clapperboard text-gradient"></i> AI Video Generation Studio</h1>
+        <p class="studio-subtitle">Convert press releases to rich, localized video packages.</p>
+    </div>
+
+    <div class="studio-grid">
+        <!-- Input Control Panel -->
+        <div class="studio-card input-panel fade-in">
+            <div class="card-header">
+                <h2><i class="fa-solid fa-sliders text-gradient"></i> Generation Parameters</h2>
+                <button class="btn-text" id="btn-load-sample" type="button">
+                    <i class="fa-solid fa-clipboard-list"></i> Load Sample PIB
+                </button>
+            </div>
+            
+            <form id="video-gen-form" class="studio-form">
+                <div class="form-group">
+                    <label for="pib_text"><i class="fa-solid fa-file-lines text-gradient"></i> PIB Press Release Text</label>
+                    <textarea id="pib_text" name="pib_text" rows="8" placeholder="Paste the official PIB Press Release text here..." required minlength="100"></textarea>
+                    <span class="helper-text">Enter the full English press release. Minimum 100 characters.</span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group half-width">
+                        <label for="language"><i class="fa-solid fa-language text-gradient"></i> Target Language</label>
+                        <select id="language" name="language" required>
+                            <option value="en">English (Default)</option>
+                            <option value="hi">Hindi (हिन्दी)</option>
+                            <option value="bn">Bengali (বাংলা)</option>
+                            <option value="mr">Marathi (मराठी)</option>
+                            <option value="te">Telugu (తెలుగు)</option>
+                            <option value="ta">Tamil (தமிழ்)</option>
+                            <option value="gu">Gujarati (ગુજરાતી)</option>
+                            <option value="ur">Urdu (اردو)</option>
+                            <option value="kn">Kannada (ಕನ್ನಡ)</option>
+                            <option value="or">Odia (ଓଡ଼ିଆ)</option>
+                            <option value="ml">Malayalam (മലയാളം)</option>
+                            <option value="pa">Punjabi (ਪੰਜਾਬୀ)</option>
+                            <option value="as">Assamese (অসমীয়া)</option>
+                            <option value="sa">Sanskrit (संस्कृतम्)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group half-width">
+                        <label for="engine_mode"><i class="fa-solid fa-gear text-gradient"></i> Synthesis Engine</label>
+                        <select id="engine_mode" name="engine_mode" required>
+                            <option value="slides">Infographic Slides (HD - Fast)</option>
+                            <option value="diffusion" disabled>Diffusion MS-1.7B (Needs CUDA GPU)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="flex-label">
+                        <label for="api_key"><i class="fa-solid fa-key text-gradient"></i> Gemini API Key (Optional)</label>
+                        <span class="api-help-tooltip" title="Required for real AI summarization/translation. If empty, the app uses a fallback engine for local demo generation."><i class="fa-solid fa-circle-question"></i> Info</span>
+                    </div>
+                    <div class="password-wrapper">
+                        <input type="password" id="api_key" name="api_key" placeholder="Enter Gemini API key (AIzaSy...)">
+                        <button type="button" class="btn-toggle-password" onclick="togglePasswordVisibility()"><i class="fa-solid fa-eye" id="eye-icon"></i></button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full btn-submit glow-effect" id="btn-generate">
+                    <i class="fa-solid fa-play"></i> Compile Video Package
+                </button>
+            </form>
+        </div>
+
+        <!-- Output Result Panel -->
+        <div class="studio-card output-panel fade-in">
+            <!-- Initial Empty State -->
+            <div class="output-empty" id="output-empty-state">
+                <div class="empty-icon"><i class="fa-solid fa-video-slash"></i></div>
+                <h3>No Video Generated Yet</h3>
+                <p>Configure parameters on the left and click "Compile Video Package" to start the pipeline.</p>
+            </div>
+
+            <!-- Progress Loader Overlay -->
+            <div class="output-loading hidden" id="output-loading-state">
+                <div class="pipeline-loader">
+                    <div class="spinner-circle"></div>
+                    <h3 id="current-step-title">Processing Pipeline...</h3>
+                    <p id="current-step-detail">Synthesizing audio and visual layouts</p>
+                </div>
+                
+                <div class="progress-steps-list">
+                    <div class="progress-step-item" id="step-nlp">
+                        <i class="step-icon fa-solid fa-circle-notch fa-spin"></i>
+                        <span class="step-text">NLP Summarization & Keyword Extraction</span>
+                    </div>
+                    <div class="progress-step-item" id="step-translate">
+                        <i class="step-icon fa-solid fa-circle-notch"></i>
+                        <span class="step-text">Neural Translation (Bhashini/Gemini API)</span>
+                    </div>
+                    <div class="progress-step-item" id="step-audio">
+                        <i class="step-icon fa-solid fa-circle-notch"></i>
+                        <span class="step-text">Audio Generation (Text-to-Speech)</span>
+                    </div>
+                    <div class="progress-step-item" id="step-visual">
+                        <i class="step-icon fa-solid fa-circle-notch"></i>
+                        <span class="step-text">Media Asset & Infographic Synthesis</span>
+                    </div>
+                    <div class="progress-step-item" id="step-compile">
+                        <i class="step-icon fa-solid fa-circle-notch"></i>
+                        <span class="step-text">Synchronized Rendering & Output Assembly</span>
+                    </div>
+                </div>
+
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="progress-bar-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- Completed Result State -->
+            <div class="output-result hidden" id="output-result-state">
+                <div class="video-container">
+                    <video id="output-video-player" controls preload="metadata">
+                        <source src="" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+
+                <div class="result-actions">
+                    <a href="" id="btn-download-video" class="btn btn-primary" download>
+                        <i class="fa-solid fa-download"></i> Download Video
+                    </a>
+                    <button id="btn-reset" class="btn btn-secondary">
+                        <i class="fa-solid fa-rotate-left"></i> Create New Video
+                    </button>
+                </div>
+
+                <!-- Tabs Container -->
+                <div class="result-tabs">
+                    <div class="tabs-nav">
+                        <button class="tab-button active" onclick="switchTab(event, 'tab-summary')">Summary</button>
+                        <button class="tab-button" onclick="switchTab(event, 'tab-translation')">Translation</button>
+                        <button class="tab-button" onclick="switchTab(event, 'tab-script')">Visual Script</button>
+                    </div>
+
+                    <div class="tab-content active" id="tab-summary">
+                        <div class="summary-box">
+                            <h4 class="tab-header">Original Title</h4>
+                            <p id="original-title-display" class="original-title"></p>
+                            <h4 class="tab-header mt-3">AI Summarized Highlights (English)</h4>
+                            <ul id="summary-points-display" class="highlights-list">
+                                <!-- Filled dynamically -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="tab-translation">
+                        <div class="translation-box">
+                            <h4 class="tab-header" id="translated-lang-title">Translated Highlights</h4>
+                            <ul id="translated-points-display" class="highlights-list text-regional">
+                                <!-- Filled dynamically -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="tab-script">
+                        <div class="script-box">
+                            <h4 class="tab-header">Scene-by-Scene Visual Storyboard</h4>
+                            <div id="storyboard-timeline" class="timeline">
+                                <!-- Filled dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script>
+    function togglePasswordVisibility() {
+        const passwordInput = document.getElementById("api_key");
+        const eyeIcon = document.getElementById("eye-icon");
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            eyeIcon.classList.remove("fa-eye");
+            eyeIcon.classList.add("fa-eye-slash");
+        } else {
+            passwordInput.type = "password";
+            eyeIcon.classList.remove("fa-eye-slash");
+            eyeIcon.classList.add("fa-eye");
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Account - PIB Press Release to Video AI{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-card fade-in">
+        <div class="auth-header">
+            <i class="fa-solid fa-user-plus text-gradient lock-icon"></i>
+            <h2>Create Account</h2>
+            <p>Sign up to start converting PIB text to video</p>
+        </div>
+        <form action="{{ url_for('signup') }}" method="POST" class="auth-form">
+            <div class="input-group">
+                <label for="username"><i class="fa-solid fa-user"></i> Username</label>
+                <input type="text" id="username" name="username" placeholder="Choose a username" required autocomplete="username">
+            </div>
+            <div class="input-group">
+                <label for="password"><i class="fa-solid fa-key"></i> Password</label>
+                <input type="password" id="password" name="password" placeholder="Create a strong password" required autocomplete="new-password">
+            </div>
+            <button type="submit" class="btn btn-primary btn-full glow-effect">
+                <i class="fa-solid fa-user-plus"></i> Sign Up
+            </button>
+        </form>
+        <div class="auth-footer">
+            <p>Already have an account? <a href="{{ url_for('login') }}" class="text-gradient">Sign In</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

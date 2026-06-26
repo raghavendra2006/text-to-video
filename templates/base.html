@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PIB Press Release to Video AI{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="dark-mode">
+    <!-- Background Elements for Premium Look -->
+    <div class="bg-blur-circle bg-blur-1"></div>
+    <div class="bg-blur-circle bg-blur-2"></div>
+
+    <header class="navbar">
+        <div class="navbar-container">
+            <a href="{{ url_for('home') }}" class="logo">
+                <i class="fa-solid fa-wand-magic-sparkles text-gradient"></i>
+                <span class="logo-text">PIB<span class="text-gradient">Video.AI</span></span>
+            </a>
+            <nav class="nav-menu">
+                <a href="{{ url_for('home') }}" class="nav-link {% if request.path == '/' %}active{% endif %}">
+                    <i class="fa-solid fa-house"></i> Home
+                </a>
+                {% if session.get('user_id') %}
+                    <a href="{{ url_for('video_gen') }}" class="nav-link {% if request.path == '/video_gen' %}active{% endif %}">
+                        <i class="fa-solid fa-video"></i> Video Studio
+                    </a>
+                    <div class="user-badge">
+                        <i class="fa-regular fa-circle-user"></i> {{ session.get('username') }}
+                    </div>
+                    <a href="{{ url_for('logout') }}" class="btn-nav btn-secondary">
+                        <i class="fa-solid fa-sign-out-alt"></i> Logout
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="nav-link {% if request.path == '/login' %}active{% endif %}">Login</a>
+                    <a href="{{ url_for('signup') }}" class="btn-nav btn-primary">Sign Up</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Flash Messages Container -->
+        <div class="flash-messages-container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }} fade-in">
+                            <i class="fa-solid {% if category == 'success' %}fa-circle-check{% elif category == 'danger' %}fa-circle-exclamation{% else %}fa-circle-info{% endif %}"></i>
+                            <span>{{ message }}</span>
+                            <button class="close-flash" onclick="this.parentElement.remove();">&times;</button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2026 PIB Video.AI. Powered by Artificial Intelligence, NLP, & Video Synthesis Engines.</p>
+            <p class="footer-links">
+                <a href="#">Terms</a> &bull; 
+                <a href="#">Privacy</a> &bull; 
+                <a href="#">Indian Regional Languages Support</a>
+            </p>
+        </div>
+    </footer>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
