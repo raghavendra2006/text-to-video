@@ -1,12 +1,41 @@
+# Node / Dependency Directories
+node_modules/
+**/node_modules/
+
+# Python Virtual Environment & Cache
 .venv/
 __pycache__/
 *.pyc
-instance/
 .pytest_cache/
+
+# Databases
+database/
+**/database/
+*.db
+*.db-journal
+*.sqlite
+
+# Environment Files
+.env
+.env.*
+!.env.example
+
+# Temporary & Generated Assets
+temp/
+**/temp/
+uploads/
+**/uploads/
+generated/
+**/generated/
+logs/
+**/logs/
+scripts/temp/
+scripts/output/
+legacy_python/static/output/
+**/static/output/
+
+# IDE / Editor Files
+.vscode/
+.idea/
 .DS_Store
-database.db
-*.mp4
-*.mp3
-*.png
-static/output/*
-!static/output/.gitkeep
+Thumbs.db

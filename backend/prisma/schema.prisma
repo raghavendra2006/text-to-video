@@ -1,0 +1,86 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:../database/dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  role      String   @default("EDITOR") // ADMIN, EDITOR, REVIEWER
+  createdAt DateTime @default(now())
+}
+
+model PressRelease {
+  id         Int      @id @default(autoincrement())
+  title      String
+  ministry   String?
+  department String?
+  date       String?
+  category   String?
+  content    String
+  createdAt  DateTime @default(now())
+}
+
+model Translation {
+  id        Int      @id @default(autoincrement())
+  releaseId Int
+  language  String
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model Script {
+  id               Int      @id @default(autoincrement())
+  releaseId        Int
+  language         String
+  title            String
+  introduction     String
+  problemStatement String
+  initiative       String
+  benefits         String
+  impact           String
+  conclusion       String
+  createdAt        DateTime @default(now())
+}
+
+model Scene {
+  id          Int     @id @default(autoincrement())
+  scriptId    Int
+  sceneNum    Int
+  headline    String
+  narration   String
+  duration    Float   @default(0)
+  imagePrompt String
+  keywords    String
+  audioPath   String?
+  imagePath   String?
+}
+
+model Video {
+  id        Int      @id @default(autoincrement())
+  releaseId Int
+  language  String
+  videoUrl  String
+  status    String   @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED
+  createdAt DateTime @default(now())
+}
+
+model Log {
+  id        Int      @id @default(autoincrement())
+  action    String
+  userId    Int?
+  details   String
+  createdAt DateTime @default(now())
+}
+
+model Setting {
+  id    Int    @id @default(autoincrement())
+  key   String @unique
+  value String
+}
